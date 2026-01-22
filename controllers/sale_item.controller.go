@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"go-backend/dto"
-	"go-backend/models"
+	// "go-backend/models"
 	"go-backend/services"
 	"net/http"
 	"strconv"
@@ -22,37 +22,30 @@ func GetSaleItems(c *gin.Context) {
 
 // MEAN : CREATE NEW SALE ITEM
 func CreateSaleItem(c *gin.Context) {
+
 	var req dto.CreateSaleItemRequest
+
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid data"})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
-	if err := services.ValidateSaleID(req.SaleID); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid sale ID"})
+	saleItem, err := services.CreateSaleItem(req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
-	if err := services.ValidateProductID(req.ProductID); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
-		return
-	}
-
-	saleItem := models.SaleItem{
-		SaleID:    req.SaleID,
-		ProductID: req.ProductID,
-		Quantity:  req.Quantity,
-		Price:     req.Price,
-		Subtotal:  req.Subtotal,
-	}
-
-	if err := services.CreateSaleItem(&saleItem); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create sale item"})
-		return
-	}
-
-	result, _ := services.GetSaleItemByID(strconv.FormatUint(uint64(saleItem.ID), 10))
-	c.JSON(http.StatusCreated, gin.H{"code": "200", "status": "success", "message": "Create sale item successfully", "data": result})
+	c.JSON(http.StatusCreated, gin.H{
+		"code":    "200",
+		"status":  "success",
+		"message": "Sale item created successfully",
+		"data":    saleItem,
+	})
 }
 
 // MEAN : GET SALE ITEM BY ID
