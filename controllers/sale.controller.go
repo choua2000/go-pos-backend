@@ -40,3 +40,14 @@ func GetSales(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"code": "200", "status": "true", "message": "Get sales successfully", "data": sales})
 }
+
+// MEAN : GET SALE BY ID
+func GetSaleByID(c *gin.Context) {
+	id := c.Param("id")
+	sale, err := services.GetSaleByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Sale not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"code": "200", "status": "true", "message": "Get sale by id successfully", "data": sale})
+}

@@ -10,4 +10,5 @@ type User struct {
 	Email    string `gorm:"unique;not null"`
 	Password string `gorm:"not null"`
 	Role     string `gorm:"type:varchar(20);default:'admin'"` // admin or cashier
+	Sales    []Sale `gorm:"foreignKey:UserID"`
 }

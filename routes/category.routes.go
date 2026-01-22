@@ -14,6 +14,6 @@ func CategoryRoutes(r *gin.Engine) {
 		category.POST("/create", middlewares.AuthMiddleware(), middlewares.AdminOnly(), controllers.CreateCategory)
 		category.GET("/get/:id", controllers.GetCategoryByID)
 		category.PUT("/update/:id", middlewares.AuthMiddleware(), middlewares.AdminOnly(), controllers.UpdateCategoryByID)
-		category.DELETE("/delete/:id", controllers.DeleteCategoryByID)
+		category.DELETE("/delete/:id", middlewares.AuthMiddleware(), middlewares.AdminOnly(), controllers.DeleteCategoryByID)
 	}
 }

@@ -28,6 +28,10 @@ func UpdateUnit(id string, unit *models.Unit) error {
 }
 
 func DeleteUnit(id string) error {
-	result := config.DB.Delete(&models.Unit{}, id)
+	var unit models.Unit
+	if err := config.DB.First(&unit, id).Error; err != nil {
+		return err
+	}
+	result := config.DB.Delete(&unit)
 	return result.Error
 }

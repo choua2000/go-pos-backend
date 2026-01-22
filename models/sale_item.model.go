@@ -9,4 +9,5 @@ type SaleItem struct {
 	Quantity  int     `json:"quantity"`
 	Price     float64 `json:"price" gorm:"type:decimal(10,2)"`
 	Subtotal  float64 `json:"subtotal" gorm:"type:decimal(10,2)"`
+	Product   Product `json:"product" gorm:"foreignKey:ProductID"`
 }

@@ -28,6 +28,10 @@ func UpdateCategory(id string, category *models.Category) error {
 }
 
 func DeleteCategory(id string) error {
-	result := config.DB.Delete(&models.Category{}, id)
+	var category models.Category
+	if err := config.DB.First(&category, id).Error; err != nil {
+		return err
+	}
+	result := config.DB.Delete(&category)
 	return result.Error
 }

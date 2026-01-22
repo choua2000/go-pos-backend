@@ -65,8 +65,13 @@ func UpdateCategoryByID(c *gin.Context) {
 // MEAN : DELETE CATEGORY BY ID
 func DeleteCategoryByID(c *gin.Context) {
 	id := c.Param("id")
+	_, err := services.GetCategoryByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Category not found"})
+		return
+	}
 	if err := services.DeleteCategory(id); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete category"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to delete category"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"code": "200", "status": "success", "message": "Delete category successfully"})

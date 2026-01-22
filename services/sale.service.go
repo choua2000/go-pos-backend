@@ -83,9 +83,35 @@ func generateInvoice() string {
 	return fmt.Sprintf("INV-%d", time.Now().Unix())
 }
 
-// GetSales retrieves all sales with their associated sale items.
+// GetSales retrieves all sales with their associated sale items and products.
 func GetSales() ([]models.Sale, error) {
 	var sales []models.Sale
-	result := config.DB.Preload("SaleItems").Find(&sales)
-	return sales, result.Error
+
+	result := config.DB.
+		Preload("User").
+		Preload("SaleItems").
+		Preload("SaleItems.Product.Category").
+		Preload("SaleItems.Product.Unit").
+		Find(&sales)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return sales, nil
+}
+
+// MEANS GET SALE BY ID
+func GetSaleByID(id string) (*models.Sale, error) {
+	var sale models.Sale
+	result := config.DB.
+		Preload("User").
+		Preload("SaleItems").
+		Preload("SaleItems.Product.Category").
+		Preload("SaleItems.Product.Unit").
+		First(&sale, id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &sale, nil
 }
