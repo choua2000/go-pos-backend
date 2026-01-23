@@ -8,11 +8,8 @@ import (
 func GetAllProducts() ([]models.Product, error) {
 	var products []models.Product
 	result := config.DB.
-		Joins("LEFT JOIN categories ON categories.id = products.category_id").
-		Joins("LEFT JOIN units ON units.id = products.unit_id").
 		Preload("Category").
 		Preload("Unit").
-		Where("categories.id IS NOT NULL AND units.id IS NOT NULL").
 		Find(&products)
 	return products, result.Error
 }

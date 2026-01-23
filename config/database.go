@@ -1,6 +1,7 @@
 package config
 
 import (
+	"go-backend/migrations"
 	"go-backend/models"
 
 	"os"
@@ -29,4 +30,5 @@ func ConnectDB() {
 	database.AutoMigrate(&models.Sale{})
 	database.AutoMigrate(&models.SaleItem{})
 	database.AutoMigrate(&models.Category{})
+	migrations.CreateProductImagesTable(DB)
 }
